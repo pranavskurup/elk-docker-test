@@ -12,3 +12,4 @@
 
 
 /etc/init.d/es-start
+/etc/init.d/ls-start

@@ -58,7 +58,7 @@ RUN \
 ### install Filebeat
 ENV FILEBEAT_VERSION 1.0.1
 ENV FILEBEAT_PACKAGE filebeat-${FILEBEAT_VERSION}-x86_64.tar.gz
-ENV LOGSTASH_HOME ${ONEWEB_HOME}/filebeat-${LOGSTASH_VERSION}-x86_64
+ENV FILEBEAT_HOME ${ONEWEB_HOME}/filebeat-${LOGSTASH_VERSION}-x86_64
 
 RUN \
  wget https://download.elastic.co/beats/filebeat/${FILEBEAT_PACKAGE} && \
@@ -78,7 +78,7 @@ ADD ./config/elasticsearch.yml ${ES_HOME}/config/elasticsearch.yml
 
 
 ADD ./init/es-start /etc/init.d/es-start
-
+RUN chmod +x /etc/init.d/es-start
 
 ### configure Logstash
 ADD ./config/01-lumberjack-input.conf /etc/logstash/conf.d/01-lumberjack-input.conf
@@ -86,14 +86,15 @@ ADD ./config/02-beats-input.conf /etc/logstash/conf.d/02-beats-input.conf
 ADD ./config/10-syslog.conf /etc/logstash/conf.d/10-syslog.conf
 ADD ./config/11-nginx.conf /etc/logstash/conf.d/11-nginx.conf
 ADD ./config/30-output.conf /etc/logstash/conf.d/30-output.conf
-ADD ./init/ls-start /etc/init.d/ls-start
 
+ADD ./init/ls-start /etc/init.d/ls-start
+RUN chmod +x /etc/init.d/ls-start
 ###############################################################################
 #                                   START
 ###############################################################################
 
 
-RUN chmod +x /etc/init.d/es-start
+
 
 ADD ./config/start.sh /usr/local/bin/start.sh
 RUN chmod +x /usr/local/bin/start.sh
