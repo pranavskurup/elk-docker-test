@@ -81,11 +81,11 @@ ADD ./init/es-start /etc/init.d/es-start
 RUN chmod +x /etc/init.d/es-start
 
 ### configure Logstash
-ADD ./config/01-lumberjack-input.conf /etc/logstash/conf.d/01-lumberjack-input.conf
-ADD ./config/02-beats-input.conf /etc/logstash/conf.d/02-beats-input.conf
-ADD ./config/10-syslog.conf /etc/logstash/conf.d/10-syslog.conf
-ADD ./config/11-nginx.conf /etc/logstash/conf.d/11-nginx.conf
-ADD ./config/30-output.conf /etc/logstash/conf.d/30-output.conf
+ADD ./config/01-lumberjack-input.conf $LOGSTASH_CONF_DIR/01-lumberjack-input.conf
+ADD ./config/02-beats-input.conf $LOGSTASH_CONF_DIR/02-beats-input.conf
+ADD ./config/10-syslog.conf $LOGSTASH_CONF_DIR/10-syslog.conf
+ADD ./config/11-nginx.conf $LOGSTASH_CONF_DIR/11-nginx.conf
+ADD ./config/30-output.conf $LOGSTASH_CONF_DIR/30-output.conf
 
 ADD ./init/ls-start /etc/init.d/ls-start
 RUN chmod +x /etc/init.d/ls-start
