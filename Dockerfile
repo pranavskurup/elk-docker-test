@@ -8,8 +8,6 @@ RUN apt-get install -y wget
 ENV ONEWEB_HOME /opt/oneweb
 RUN useradd -d ${ONEWEB_HOME} -m oneweb
 
-RUN su oneweb
-
 WORKDIR ${ONEWEB_HOME}
 
 
@@ -18,12 +16,18 @@ WORKDIR ${ONEWEB_HOME}
 ENV ES_VERSION 2.4.0
 ENV ES_PACKAGE elasticsearch-${ES_VERSION}.tar.gz
 ENV ES_HOME ${ONEWEB_HOME}/elasticsearch-${ES_VERSION}
+ENV ES_LOG_DIR ${ONEWEB_HOME}/log/elasticsearch-${ES_VERSION}
+ENV ES_DATA_DIR ${ONEWEB_HOME}/data/elasticsearch-${ES_VERSION}
 
 RUN \
  wget https://download.elasticsearch.org/elasticsearch/release/org/elasticsearch/distribution/tar/elasticsearch/${ES_VERSION}/${ES_PACKAGE} && \
  tar xvzf ${ES_PACKAGE} && \
  rm -f ${ES_PACKAGE}
 
+RUN \
+ mkdir ${ES_LOG_DIR} -p && \
+ mkdir ${ES_DATA_DIR} -p && \
+ mkdir ${ES_HOME}/conf.d -p
 ### install Logstash
 
 ENV LOGSTASH_VERSION 2.4.0
@@ -55,5 +59,22 @@ RUN \
  tar zxvf ${FILEBEAT_PACKAGE} && \
  rm -f ${FILEBEAT_PACKAGE}
 
+
+###############################################################################
+#                               CONFIGURATION
+###############################################################################
+
+### configure Elasticsearch
+
+ADD ./config/elasticsearch.yml ${ES_HOME}/conf.d/elasticsearch.yml
+
 RUN \
  chown -R oneweb:oneweb /opt/oneweb/
+ADD ./config/elastic-init /etc/init.d/es-service
+
+ADD ./config/start.sh /usr/local/bin/start.sh
+RUN chmod +x /usr/local/bin/start.sh
+
+EXPOSE 5601 9200 9300 5000 5044
+
+CMD [ "/usr/local/bin/start.sh" ]
