@@ -15,9 +15,11 @@ ES_MAX_MEM=256g
 DAEMON=$ES_HOME/bin/elasticsearch
 NAME=elasticsearch
 DESC=elasticsearch
-PID_FILE=/var/run/$NAME.pid
 LOG_DIR=$ES_LOG_DIR
 DATA_DIR=$ES_DATA_DIR
 WORK_DIR=/tmp/$NAME
+CMD="$ES_HOME/bin/elasticsearch -Des.path.home=$ES_HOME -Des.path.logs=$LOG_DIR -Des.path.data=$DATA_DIR -Des.path.work=$WORK_DIR"
 
-$ES_HOME/bin/elasticsearch -Des.path.home=$ES_HOME -Des.path.logs=$LOG_DIR -Des.path.data=$DATA_DIR -Des.path.work=$WORK_DIR
+nohup `eval ${CMD}`  > $LOG_DIR/nohup-out.log &
+
+
