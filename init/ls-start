@@ -17,7 +17,6 @@ LOG_DIR=$LOGSTASH_LOG_DIR
 LOG_FILE="${LOG_DIR}/$name.log"
 DATA_DIR=$LOGSTASH_DATA_DIR
 WORK_DIR=/tmp/$NAME
-LS_CONF_DIR
 CMD="$LOGSTASH_HOME/bin/logstash -f ${LOGSTASH_CONF_DIR} -l ${LOG_FILE}"
 
 nohup `eval ${CMD}`  > $LOG_DIR/nohup-out.log &
