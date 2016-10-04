@@ -11,4 +11,4 @@
 #   prepared to reap zombie processes).
 
 
-/etc/init.d/es-service start
+/etc/init.d/es-start

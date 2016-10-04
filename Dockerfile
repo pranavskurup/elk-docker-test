@@ -7,7 +7,7 @@ RUN apt-get update
 RUN apt-get install -y wget
 ENV ONEWEB_HOME /opt/oneweb
 RUN useradd -d ${ONEWEB_HOME} -m oneweb
-
+RUN chsh -s /bin/bash oneweb
 WORKDIR ${ONEWEB_HOME}
 
 
@@ -69,9 +69,9 @@ ADD ./config/elasticsearch.yml ${ES_HOME}/config/elasticsearch.yml
 
 RUN \
  chown -R oneweb:oneweb /opt/oneweb/
-ADD ./init/elastic-init /etc/init.d/es-service
+ADD ./init/es-start /etc/init.d/es-start
 
-RUN chmod +x /etc/init.d/es-service
+RUN chmod +x /etc/init.d/es-start
 
 ADD ./config/start.sh /usr/local/bin/start.sh
 RUN chmod +x /usr/local/bin/start.sh
