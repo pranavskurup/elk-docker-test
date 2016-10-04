@@ -26,8 +26,7 @@ RUN \
 
 RUN \
  mkdir ${ES_LOG_DIR} -p && \
- mkdir ${ES_DATA_DIR} -p && \
- mkdir ${ES_HOME}/conf.d -p
+ mkdir ${ES_DATA_DIR} -p
 ### install Logstash
 
 ENV LOGSTASH_VERSION 2.4.0
@@ -66,7 +65,7 @@ RUN \
 
 ### configure Elasticsearch
 
-ADD ./config/elasticsearch.yml ${ES_HOME}/conf.d/elasticsearch.yml
+ADD ./config/elasticsearch.yml ${ES_HOME}/config/elasticsearch.yml
 
 RUN \
  chown -R oneweb:oneweb /opt/oneweb/
