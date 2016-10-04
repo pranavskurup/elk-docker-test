@@ -1,0 +1,25 @@
+#! /bin/sh
+### BEGIN INIT INFO
+# Provides:          logstash
+# Required-Start:    $all
+# Required-Stop:     $all
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Starts logstash
+# Description:       Starts logstash
+### END INIT INFO
+
+
+DAEMON=$LOGSTASH_HOME/bin/elasticsearch
+NAME=logstash
+DESC=logstash
+LOG_DIR=$LOGSTASH_LOG_DIR
+LOG_FILE="${LOG_DIR}/$name.log"
+DATA_DIR=$LOGSTASH_DATA_DIR
+WORK_DIR=/tmp/$NAME
+LS_CONF_DIR
+CMD="$LOGSTASH_HOME/bin/logstash -f ${LOGSTASH_CONF_DIR} -l ${LOG_FILE}"
+
+nohup `eval ${CMD}`  > $LOG_DIR/nohup-out.log &
+
+

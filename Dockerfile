@@ -32,12 +32,19 @@ RUN \
 ENV LOGSTASH_VERSION 2.4.0
 ENV LOGSTASH_PACKAGE logstash-${LOGSTASH_VERSION}.tar.gz
 ENV LOGSTASH_HOME ${ONEWEB_HOME}/logstash-${LOGSTASH_VERSION}
+ENV LOGSTASH_LOG_DIR ${ONEWEB_HOME}/log/logstash-${ES_VERSION}
+ENV LOGSTASH_DATA_DIR ${ONEWEB_HOME}/data/logstash-${ES_VERSION}
+ENV LOGSTASH_CONF_DIR ${LOGSTASH_HOME}/conf.d/
 
 RUN \
  wget https://download.elasticsearch.org/logstash/logstash/${LOGSTASH_PACKAGE} && \
  tar xvzf ${LOGSTASH_PACKAGE} && \
  rm -f ${LOGSTASH_PACKAGE}
- 
+
+RUN \
+ mkdir ${LOGSTASH_LOG_DIR} -p && \
+ mkdir ${LOGSTASH_CONF_DIR} -p
+
 ### install Kibana
 ENV KIBANA_VERSION 4.5.0 
 ENV KIBANA_PACKAGE kibana-${KIBANA_VERSION}-linux-x64.tar.gz
@@ -58,6 +65,8 @@ RUN \
  tar zxvf ${FILEBEAT_PACKAGE} && \
  rm -f ${FILEBEAT_PACKAGE}
 
+RUN \
+ chown -R oneweb:oneweb /opt/oneweb/
 
 ###############################################################################
 #                               CONFIGURATION
@@ -67,9 +76,22 @@ RUN \
 
 ADD ./config/elasticsearch.yml ${ES_HOME}/config/elasticsearch.yml
 
-RUN \
- chown -R oneweb:oneweb /opt/oneweb/
+
 ADD ./init/es-start /etc/init.d/es-start
+
+
+### configure Logstash
+ADD ./config/01-lumberjack-input.conf /etc/logstash/conf.d/01-lumberjack-input.conf
+ADD ./config/02-beats-input.conf /etc/logstash/conf.d/02-beats-input.conf
+ADD ./config/10-syslog.conf /etc/logstash/conf.d/10-syslog.conf
+ADD ./config/11-nginx.conf /etc/logstash/conf.d/11-nginx.conf
+ADD ./config/30-output.conf /etc/logstash/conf.d/30-output.conf
+ADD ./init/ls-start /etc/init.d/ls-start
+
+###############################################################################
+#                                   START
+###############################################################################
+
 
 RUN chmod +x /etc/init.d/es-start
 
