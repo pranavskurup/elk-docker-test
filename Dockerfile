@@ -72,6 +72,8 @@ RUN \
  chown -R oneweb:oneweb /opt/oneweb/
 ADD ./init/elastic-init /etc/init.d/es-service
 
+RUN chmod +x /etc/init.d/es-service
+
 ADD ./config/start.sh /usr/local/bin/start.sh
 RUN chmod +x /usr/local/bin/start.sh
 
